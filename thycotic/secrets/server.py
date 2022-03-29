@@ -348,6 +348,23 @@ class SecretServer:
                     )
         return secret
 
+    def get_secret_json_by_path(self, secret_path):
+        """Gets a secret from Secret Server by path
+
+        :param secret_path: full path of the secret
+        :type secret_path: str
+        :return: a JSON formatted string representation of the secret
+        :rtype: ``str``
+        :raise: :class:`SecretServerAccessError` when the caller does not have
+                permission to access the secret
+        :raise: :class:`SecretServerError` when the REST API call fails for
+                any other reason
+        """
+        path = "\\" + re.sub(r"[\\/]+", r"\\", secret_path).lstrip("\\").rstrip("\\")
+        params = {"secretPath": path}
+
+        return self.get_secret_json(id=0, query_params=params)
+
     def get_secret_by_path(self, secret_path, fetch_file_attachments=True):
         """Gets a secret by path
 
